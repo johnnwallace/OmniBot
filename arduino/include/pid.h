@@ -13,13 +13,15 @@ class PID{
     float saturationError;
 
 public:
+    // Update setpoint
+    void set(float setpoint);
 
-    // Update errors and the  resulting command
-    void update(float value, float dt);
+    // Update errors and the resulting command
+    void update(float state, float dt);
 
     // Return command
     float getCommand();
 
-    // Create a PID controller with the given setpoint and gains
-    PID(float setpoint, float p, float i, float d, float s);
+    // Initialize a PID controller with the given gains
+    PID(float p, float i, float d, float s);
 };
