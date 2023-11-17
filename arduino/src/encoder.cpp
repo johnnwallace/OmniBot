@@ -27,7 +27,7 @@ void Encoder::update() {
     unsigned long this_micros = micros();
     unsigned long this_counts = read();
     
-    velo = (double)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * 1000000;
+    velo = ENCODER_GROUND_DIST * (double)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * 1000000;
 
     last_micros = this_micros;
     last_counts = this_counts;
