@@ -15,11 +15,11 @@ class Encoder{
     unsigned long last_counts;
 
     // current wheel velocity
-    float velo;
+    double velo;
 
 public:
     // returns wheel velocity
-    int velocity() { return velo; };
+    double velocity() { return velo; };
 
     // reads encoder count
     unsigned long read();

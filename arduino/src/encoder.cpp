@@ -27,7 +27,7 @@ void Encoder::update() {
     unsigned long this_micros = micros();
     unsigned long this_counts = read();
     
-    velo = ENCODER_GROUND_DIST * (this_counts - last_counts) / (this_micros - last_micros) / 1000;
+    velo = (double)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * 1000000;
 
     last_micros = this_micros;
     last_counts = this_counts;
@@ -52,11 +52,12 @@ void Encoder::clear() {
 
 Encoder::Encoder(int cs) {
     this->cs = cs;
-    this->last_counts = 0;
-    this->last_micros = micros();
 
     digitalWrite(cs, LOW);
     SPI.transfer(0x88);
     SPI.transfer(0x03);
     digitalWrite(cs, HIGH);
+    
+    this->last_counts = read();
+    this->last_micros = micros();
 }
