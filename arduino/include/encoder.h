@@ -30,5 +30,6 @@ public:
     // clears encoder states
     void clear();
 
+    Encoder() {};
     Encoder(int cs);
 };
