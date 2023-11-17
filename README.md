@@ -1,2 +1,2 @@
 # OmniBot
-Scripts for running our omnidirectional follower bot.
+Code for running our omnidirectional follower bot.
