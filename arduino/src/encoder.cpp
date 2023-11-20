@@ -52,12 +52,19 @@ void Encoder::clear() {
 
 Encoder::Encoder(int cs) {
     this->cs = cs;
+}
 
+void Encoder::begin() {
+    // initialize pin
+    pinMode(cs, OUTPUT);
+
+    // initialize SPI device
     digitalWrite(cs, LOW);
     SPI.transfer(0x88);
     SPI.transfer(0x03);
     digitalWrite(cs, HIGH);
-    
+
+    // initialize states
     this->last_counts = read();
     this->last_micros = micros();
 }

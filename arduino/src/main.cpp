@@ -5,20 +5,16 @@
 #include "pid.h"
 #include "utils.h"
 
-Encoder encoder1;
-Encoder encoder2;
-Encoder encoder3;
+Encoder encoder1(A1);
+Encoder encoder2(A2);
+Encoder encoder3(A3);
 
 void setup() {
     Serial.begin(9600);
-    pinMode(A1, OUTPUT);
-    pinMode(A2, OUTPUT);
-    pinMode(A3, OUTPUT);
     SPI.begin();
-
-    encoder1 = Encoder(A1);
-    encoder2 = Encoder(A2);
-    encoder3 = Encoder(A3);
+    encoder1.begin();
+    encoder2.begin();
+    encoder3.begin();
 }
 
 void loop() {

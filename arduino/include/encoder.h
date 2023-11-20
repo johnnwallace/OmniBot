@@ -24,6 +24,9 @@ public:
     // reads encoder count
     unsigned long read();
 
+    // initializes encoder
+    void begin();
+
     // updates encoder states
     void update();
 
