@@ -27,7 +27,11 @@ void Encoder::update() {
     unsigned long this_micros = micros();
     unsigned long this_counts = read();
     
-    velo = ENCODER_GROUND_DIST * (double)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * 1000000;
+    // calculate new velocity
+    double new_velo = (double)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * 1000000 * scale;
+    
+    // update filter
+    velo = (1 - alpha) * new_velo + alpha * velo;
 
     last_micros = this_micros;
     last_counts = this_counts;
@@ -50,8 +54,10 @@ void Encoder::clear() {
     last_micros = micros();
 }
 
-Encoder::Encoder(int cs) {
+Encoder::Encoder(int cs, double alpha, double scale) {
     this->cs = cs;
+    this->alpha = alpha;
+    this->scale = scale;
 }
 
 void Encoder::begin() {

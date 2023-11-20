@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-#define ENCODER_GROUND_DIST 1
-
 class Encoder{
     // chip select pin
     int cs;
@@ -16,7 +14,12 @@ class Encoder{
 
     // current wheel velocity
     double velo;
+    
+    // scale velocity by this value
+    double scale;
 
+    // low-pass dropoff
+    double alpha;
 public:
     // returns wheel velocity
     double velocity() { return velo; };
@@ -34,5 +37,5 @@ public:
     void clear();
 
     Encoder() {};
-    Encoder(int cs);
+    Encoder(int cs, double alpha, double scale);
 };
