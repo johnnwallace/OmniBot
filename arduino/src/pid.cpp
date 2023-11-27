@@ -8,7 +8,7 @@ void PID::set(double setpoint) {
 void PID::update(double state, double dt) {
     this->lastError = error;
     this->error = setpoint - state;
-    this->cumulativeError += state * dt;
+    this->cumulativeError += error * dt;
     this->derivativeError = (error - lastError)/dt;
 
     double unclamped = this->gains[0] * this->error
