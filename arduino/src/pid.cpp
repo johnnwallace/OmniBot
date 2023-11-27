@@ -7,7 +7,7 @@ void PID::set(double setpoint) {
 
 void PID::update(double state, double dt) {
     this->lastError = error;
-    this->error = state - setpoint;
+    this->error = setpoint - state;
     this->cumulativeError += state * dt;
     this->derivativeError = (error - lastError)/dt;
 
