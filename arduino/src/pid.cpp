@@ -1,17 +1,17 @@
 #include "utils.h"
 #include "pid.h"
 
-void PID::set(float setpoint) {
+void PID::set(double setpoint) {
     this->setpoint = setpoint;
 }
 
-void PID::update(float state, float dt) {
+void PID::update(double state, double dt) {
     this->lastError = error;
     this->error = state - setpoint;
     this->cumulativeError += state * dt;
     this->derivativeError = (error - lastError)/dt;
 
-    float unclamped = this->gains[0] * this->error
+    double unclamped = this->gains[0] * this->error
                     + this->gains[1] * this->cumulativeError
                     + this->gains[2] * this->derivativeError
                     + this->gains[3] * this->saturationError;
@@ -20,11 +20,13 @@ void PID::update(float state, float dt) {
     this->saturationError = this->command - unclamped;
 }
 
-float PID::getCommand() {
+double PID::getCommand() {
     return this->command;
 }
 
-PID::PID(float p, float i, float d, float s) {
+PID::PID(double p, double i, double d, double s, double min, double max) {
+    this->limit[0] = min;
+    this->limit[1] = max;
     this->gains[0] = p;
     this->gains[1] = i;
     this->gains[2] = d;

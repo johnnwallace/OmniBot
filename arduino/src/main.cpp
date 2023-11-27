@@ -9,6 +9,8 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A2, 0.9, -1.0/3); // this encoder seems to count 3 times as fast and in the opposite direction
 Encoder encoder3(A3, 0.9, 1);
 
+PID controller(1, 0, 0, 0, -10000, -10000);
+
 void setup() {
     Serial.begin(9600);
     SPI.begin();
