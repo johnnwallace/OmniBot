@@ -5,6 +5,10 @@ void PID::set(double setpoint) {
     this->setpoint = setpoint;
 }
 
+double PID::getSetpoint() {
+    return this->setpoint;
+}
+
 void PID::update(double state, double dt) {
     this->lastError = error;
     this->error = setpoint - state;
@@ -16,7 +20,11 @@ void PID::update(double state, double dt) {
                     + this->gains[2] * this->derivativeError
                     + this->gains[3] * this->saturationError;
 
-    this->command = clamp(unclamped, this->limit[0], this->limit[1]);
+    if (this->clamped) {
+        this->command = clamp(unclamped, this->limit[0], this->limit[1]);
+    } else {
+        this->command = unclamped;
+    }
     this->saturationError = this->command - unclamped;
 }
 
@@ -31,6 +39,22 @@ PID::PID(double p, double i, double d, double s, double min, double max) {
     this->gains[1] = i;
     this->gains[2] = d;
     this->gains[3] = s;
+    this->clamped = true;
+
+    this->setpoint = 0;
+    this->error = 0;
+    this->lastError = 0;
+    this->cumulativeError = 0;
+    this->derivativeError = 0;
+    this->saturationError = 0;
+}
+
+PID::PID(double p, double i, double d) {
+    this->gains[0] = p;
+    this->gains[1] = i;
+    this->gains[2] = d;
+    this->gains[3] = 0;
+    this->clamped = false;
 
     this->setpoint = 0;
     this->error = 0;

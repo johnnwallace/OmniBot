@@ -9,7 +9,8 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A2, 0.9, -1.0/3); // this encoder seems to count 3 times as fast and in the opposite direction
 Encoder encoder3(A3, 0.9, 1);
 
-PID controller(6, 1, 0, 1, -10000, 10000);
+// PID controller(6, 0.1, 0.1, 0, -100000, 100000);
+PID controller(6, 0.1, 0.1);
 
 unsigned long last_micros;
 
@@ -50,11 +51,23 @@ void loop() {
     // Serial.print(", ");
     // Serial.println(encoder3.velocity());
 
+    // Serial.print(encoder3.velocity());
+    // Serial.print(", ");
+    // Serial.println(controller.getCommand());
+
+    setMotor(controller.getCommand() / 23.0); // need to scale encoder to pwm
+
+    if (this_micros > 10000000) {
+        controller.set(2300);
+    }
+
+    // Serial.print(this_micros);
+    // Serial.print(", ");
+    Serial.print(controller.getSetpoint());
+    Serial.print(", ");
     Serial.print(encoder3.velocity());
     Serial.print(", ");
     Serial.println(controller.getCommand());
-
-    setMotor(controller.getCommand() / 23.0); // need to scale encoder to pwm
 
     encoder1.update();
     encoder2.update();

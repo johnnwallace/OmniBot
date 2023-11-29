@@ -11,10 +11,14 @@ class PID{
     double cumulativeError;
     double derivativeError;
     double saturationError;
+    bool clamped;
 
 public:
     // Update setpoint
     void set(double setpoint);
+
+    // Return current setpoint
+    double getSetpoint();
 
     // Update errors and the resulting command
     void update(double state, double dt);
@@ -22,6 +26,9 @@ public:
     // Return command
     double getCommand();
 
-    // Initialize a PID controller with the given gains
+    // Initialize a PID controller with the given gains and limits
     PID(double p, double i, double d, double s, double min, double max);
+
+    // Initialize a PID controller with the given gains and limits
+    PID(double p, double i, double d);
 };
