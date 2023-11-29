@@ -30,13 +30,12 @@ double PID::getCommand() {
     return this->command;
 }
 
-PID::PID(double p, double i, double d, double s, double min, double max) {
+PID::PID(double p, double i, double d, double min, double max) {
     this->limit[0] = min;
     this->limit[1] = max;
     this->gains[0] = p;
     this->gains[1] = i;
     this->gains[2] = d;
-    this->gains[3] = s;
     this->clamped = true;
 
     this->setpoint = 0;

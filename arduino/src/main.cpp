@@ -9,7 +9,7 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A2, 0.9, -1.0/3); // this encoder seems to count 3 times as fast and in the opposite direction
 Encoder encoder3(A3, 0.9, 1);
 
-PID controller(1.5, 0.00001, 0.1, 0, -685, 685);
+PID controller(1.5, 0.00001, 0.1, -685, 685);
 
 unsigned long last_micros;
 
@@ -40,7 +40,7 @@ void setup() {
     pinMode(dirFwd, OUTPUT);
     pinMode(dirBkwd, OUTPUT);
 
-    controller.set(500);
+    controller.set(300);
 }
 
 void loop() {
@@ -58,7 +58,7 @@ void loop() {
     Serial.println(controller.getSetpoint());
     
     if (this_micros > 5000000) {
-        controller.set(-500);
+        controller.set(-200);
     
     }
 

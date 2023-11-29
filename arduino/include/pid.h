@@ -1,7 +1,7 @@
 #pragma once
 
 class PID{
-    double gains[4];
+    double gains[3];
     double limit[2];
     double setpoint;
     double command;
@@ -27,7 +27,7 @@ public:
     double getCommand();
 
     // Initialize a PID controller with the given gains and limits
-    PID(double p, double i, double d, double s, double min, double max);
+    PID(double p, double i, double d, double min, double max);
 
     // Initialize a PID controller with the given gains and limits
     PID(double p, double i, double d);
