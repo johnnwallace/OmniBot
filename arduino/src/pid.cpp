@@ -44,17 +44,3 @@ PID::PID(float p, float i, float d, float min, float max) {
     this->cumulativeError = 0;
     this->derivativeError = 0;
 }
-
-PID::PID(float p, float i, float d) {
-    this->gains[0] = p;
-    this->gains[1] = i;
-    this->gains[2] = d;
-    this->gains[3] = 0;
-    this->clamped = false;
-
-    this->setpoint = 0;
-    this->error = 0;
-    this->lastError = 0;
-    this->cumulativeError = 0;
-    this->derivativeError = 0;
-}

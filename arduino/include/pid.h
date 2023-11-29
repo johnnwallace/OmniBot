@@ -25,9 +25,6 @@ public:
     // Return command
     int getCommand();
 
-    // Initialize a PID controller with the given gains and limits
+    PID() {};
     PID(float p, float i, float d, float min, float max);
-
-    // Initialize a PID controller with the given gains and limits
-    PID(float p, float i, float d);
 };
