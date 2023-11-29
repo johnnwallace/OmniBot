@@ -25,7 +25,7 @@ double setMotor(double command) {
         digitalWrite(dirFwd, LOW);
         digitalWrite(dirBkwd, HIGH);
     }
-    unsigned int out = clamp(command / 685 * 255, 0, 255);
+    unsigned int out = clamp(abs(command) / 685 * 255, 0, 255);
     analogWrite(pwm, out);
     return out;
 }
@@ -56,6 +56,11 @@ void loop() {
     // Serial.println(setMotor(controller.getCommand()));
     setMotor(controller.getCommand());
     Serial.println(controller.getSetpoint());
+    
+    if (this_micros > 5000000) {
+        controller.set(-500);
+    
+    }
 
     encoder1.update();
     encoder2.update();
