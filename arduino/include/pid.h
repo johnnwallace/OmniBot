@@ -1,34 +1,33 @@
 #pragma once
 
 class PID{
-    double gains[3];
-    double limit[2];
-    double setpoint;
-    double command;
+    float gains[3];
+    int limit[2];
+    int setpoint;
+    int command;
 
-    double error;
-    double lastError;
-    double cumulativeError;
-    double derivativeError;
-    double saturationError;
+    float error;
+    float lastError;
+    float cumulativeError;
+    float derivativeError;
     bool clamped;
 
 public:
     // Update setpoint
-    void set(double setpoint);
+    void set(int setpoint);
 
     // Return current setpoint
-    double getSetpoint();
+    int getSetpoint();
 
     // Update errors and the resulting command
-    void update(double state, double dt);
+    void update(float state, float dt);
 
     // Return command
-    double getCommand();
+    int getCommand();
 
     // Initialize a PID controller with the given gains and limits
-    PID(double p, double i, double d, double min, double max);
+    PID(float p, float i, float d, float min, float max);
 
     // Initialize a PID controller with the given gains and limits
-    PID(double p, double i, double d);
+    PID(float p, float i, float d);
 };

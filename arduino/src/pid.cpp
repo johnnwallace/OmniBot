@@ -1,21 +1,21 @@
 #include "utils.h"
 #include "pid.h"
 
-void PID::set(double setpoint) {
+void PID::set(int setpoint) {
     this->setpoint = setpoint;
 }
 
-double PID::getSetpoint() {
+int PID::getSetpoint() {
     return this->setpoint;
 }
 
-void PID::update(double state, double dt) {
+void PID::update(float state, float dt) {
     this->lastError = error;
     this->error = setpoint - state;
     this->cumulativeError += error * dt * (error / setpoint < 0.3);
     this->derivativeError = (error - lastError)/dt;
 
-    double unclamped = this->gains[0] * this->error
+    float unclamped = this->gains[0] * this->error
                     + this->gains[1] * this->cumulativeError
                     + this->gains[2] * this->derivativeError;
 
@@ -26,11 +26,11 @@ void PID::update(double state, double dt) {
     }
 }
 
-double PID::getCommand() {
+int PID::getCommand() {
     return this->command;
 }
 
-PID::PID(double p, double i, double d, double min, double max) {
+PID::PID(float p, float i, float d, float min, float max) {
     this->limit[0] = min;
     this->limit[1] = max;
     this->gains[0] = p;
@@ -43,10 +43,9 @@ PID::PID(double p, double i, double d, double min, double max) {
     this->lastError = 0;
     this->cumulativeError = 0;
     this->derivativeError = 0;
-    this->saturationError = 0;
 }
 
-PID::PID(double p, double i, double d) {
+PID::PID(float p, float i, float d) {
     this->gains[0] = p;
     this->gains[1] = i;
     this->gains[2] = d;
@@ -58,5 +57,4 @@ PID::PID(double p, double i, double d) {
     this->lastError = 0;
     this->cumulativeError = 0;
     this->derivativeError = 0;
-    this->saturationError = 0;
 }
