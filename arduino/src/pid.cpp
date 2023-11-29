@@ -12,20 +12,18 @@ double PID::getSetpoint() {
 void PID::update(double state, double dt) {
     this->lastError = error;
     this->error = setpoint - state;
-    this->cumulativeError += error * dt;
+    this->cumulativeError += error * dt * (error / setpoint < 0.3);
     this->derivativeError = (error - lastError)/dt;
 
     double unclamped = this->gains[0] * this->error
                     + this->gains[1] * this->cumulativeError
-                    + this->gains[2] * this->derivativeError
-                    + this->gains[3] * this->saturationError;
+                    + this->gains[2] * this->derivativeError;
 
     if (this->clamped) {
         this->command = clamp(unclamped, this->limit[0], this->limit[1]);
     } else {
         this->command = unclamped;
     }
-    this->saturationError = this->command - unclamped;
 }
 
 double PID::getCommand() {

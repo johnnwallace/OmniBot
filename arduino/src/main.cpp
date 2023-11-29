@@ -9,8 +9,7 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A2, 0.9, -1.0/3); // this encoder seems to count 3 times as fast and in the opposite direction
 Encoder encoder3(A3, 0.9, 1);
 
-// PID controller(6, 0.1, 0.1, 0, -100000, 100000);
-PID controller(6, 0.1, 0.1);
+PID controller(1.5, 0.00001, 0.1, 0, -685, 685);
 
 unsigned long last_micros;
 
@@ -18,15 +17,17 @@ unsigned int pwm = 9;
 unsigned int dirFwd = 8;
 unsigned int dirBkwd = 10;
 
-void setMotor(double command) {
+double setMotor(double command) {
     if (command > 0) {
-        digitalWrite(dirFwd, LOW);
-        digitalWrite(dirBkwd, HIGH);
-    } else {
         digitalWrite(dirFwd, HIGH);
         digitalWrite(dirBkwd, LOW);
+    } else {
+        digitalWrite(dirFwd, LOW);
+        digitalWrite(dirBkwd, HIGH);
     }
-    analogWrite(pwm, abs(command));
+    unsigned int out = clamp(command / 685 * 255, 0, 255);
+    analogWrite(pwm, out);
+    return out;
 }
 
 void setup() {
@@ -39,35 +40,22 @@ void setup() {
     pinMode(dirFwd, OUTPUT);
     pinMode(dirBkwd, OUTPUT);
 
-    controller.set(2300);
+    controller.set(500);
 }
 
 void loop() {
     unsigned long this_micros = micros();
-
     // Serial.print(encoder1.velocity());
     // Serial.print(", ");
     // Serial.print(encoder2.velocity());
     // Serial.print(", ");
     // Serial.println(encoder3.velocity());
 
-    // Serial.print(encoder3.velocity());
-    // Serial.print(", ");
-    // Serial.println(controller.getCommand());
-
-    setMotor(controller.getCommand() / 23.0); // need to scale encoder to pwm
-
-    if (this_micros > 10000000) {
-        controller.set(2300);
-    }
-
-    // Serial.print(this_micros);
-    // Serial.print(", ");
-    Serial.print(controller.getSetpoint());
-    Serial.print(", ");
     Serial.print(encoder3.velocity());
     Serial.print(", ");
-    Serial.println(controller.getCommand());
+    // Serial.println(setMotor(controller.getCommand()));
+    setMotor(controller.getCommand());
+    Serial.println(controller.getSetpoint());
 
     encoder1.update();
     encoder2.update();
