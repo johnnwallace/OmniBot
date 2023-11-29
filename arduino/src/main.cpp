@@ -9,7 +9,8 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A2, 0.9, -1.0/3); // this encoder seems to count 3 times as fast and in the opposite direction
 Encoder encoder3(A3, 0.9, 1);
 
-PID controller(1.5, 0.00001, 0.1, -685, 685);
+PID controller(1.5, 0.00001, 0.1, -685, 685); // motor 3 forward
+// PID controller(2, 0.000003, 0, -685, 685); // motor 3 backward
 
 unsigned long last_micros;
 
@@ -40,7 +41,7 @@ void setup() {
     pinMode(dirFwd, OUTPUT);
     pinMode(dirBkwd, OUTPUT);
 
-    controller.set(300);
+    controller.set(-685);
 }
 
 void loop() {
@@ -53,14 +54,15 @@ void loop() {
 
     Serial.print(encoder3.velocity());
     Serial.print(", ");
-    // Serial.println(setMotor(controller.getCommand()));
-    setMotor(controller.getCommand());
-    Serial.println(controller.getSetpoint());
+    Serial.println(setMotor(controller.getCommand()));
+    // Serial.println(controller.getSetpoint());
     
-    if (this_micros > 5000000) {
-        controller.set(-200);
+    // setMotor(-300);
+
+    // if (this_micros > 5000000) {
+    //     controller.set(-200);
     
-    }
+    // }
 
     encoder1.update();
     encoder2.update();
