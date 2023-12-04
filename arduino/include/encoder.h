@@ -13,16 +13,16 @@ class Encoder{
     unsigned long last_counts;
 
     // current wheel velocity
-    double velo;
+    float velo;
     
     // scale velocity by this value
-    double scale;
+    float scale;
 
     // low-pass dropoff
-    double alpha;
+    float alpha;
 public:
     // returns wheel velocity
-    double velocity() { return velo; };
+    float velocity() { return velo; };
 
     // reads encoder count
     unsigned long read();
@@ -36,6 +36,9 @@ public:
     // clears encoder states
     void clear();
 
+    // sets the scale of the encoder
+    void setScale(float scale) { this->scale = scale; };
+
     Encoder() {};
-    Encoder(int cs, double alpha, double scale);
+    Encoder(int cs, float alpha, int scale);
 };

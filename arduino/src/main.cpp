@@ -6,19 +6,54 @@
 #include "utils.h"
 
 Encoder encoder1(A1, 0.9, 1);
-Encoder encoder2(A2, 0.9, -1.0/3); // this encoder seems to count 3 times as fast and in the opposite direction
-Encoder encoder3(A3, 0.9, 1);
+Encoder encoder2(A3, 0.9, 1);
+Encoder encoder3(A2, 0.9, 1);
 
-PID controller(1.5, 0.00001, 0.1, -685, 685); // motor 3 forward
+// MOTOR GAINS
+// 1: 
+// 2: 1.4, 0.00001, 0.1 (no switch)
+// 3: 1.4, 0.00001, 0.1 (motor switch)
+
+// wheel 1 encoder sometimes scaled by -4
+
+PID controller(1.4, 0.00001, 0.1, -685, 685); // motor 3 forward
 // PID controller(2, 0.000003, 0, -685, 685); // motor 3 backward
 
 unsigned long last_micros;
 
-unsigned int pwm = 9;
-unsigned int dirFwd = 8;
-unsigned int dirBkwd = 10;
+unsigned int pwm1 = 3;
+unsigned int dirFwd1 = 2;
+unsigned int dirBkwd1 = 4;
 
-double setMotor(double command) {
+unsigned int pwm2 = 6;
+unsigned int dirFwd2 = 5;
+unsigned int dirBkwd2 = 7;
+
+unsigned int pwm3 = 9;
+unsigned int dirFwd3 = 8;
+unsigned int dirBkwd3 = 10;
+
+double setMotor(int motor, double command) {
+    unsigned int pwm, dirFwd, dirBkwd;
+
+    switch(motor) {
+        case 1:
+            pwm = pwm1;
+            dirFwd = dirFwd1;
+            dirBkwd = dirBkwd1;
+            break;
+        case 2:
+            pwm = pwm2;
+            dirFwd = dirFwd2;
+            dirBkwd = dirBkwd2;
+            break;
+        case 3:
+            pwm = pwm3;
+            dirFwd = dirFwd3;
+            dirBkwd = dirBkwd3;
+            break;
+    }
+
     if (command > 0) {
         digitalWrite(dirFwd, HIGH);
         digitalWrite(dirBkwd, LOW);
@@ -31,30 +66,71 @@ double setMotor(double command) {
     return out;
 }
 
+void senseMotors() {
+    setMotor(1, 100);
+    setMotor(2, 100);
+    setMotor(3, 100);
+
+    long start_micros = micros();
+
+    while (micros() - start_micros < 500000) {
+        encoder1.update();
+        encoder2.update();
+        encoder3.update();
+    }
+
+    if (encoder1.velocity() < 0) {
+        encoder1.setScale(-0.25);
+    }
+
+    setMotor(1, 0);
+    setMotor(2, 0);
+    setMotor(3, 0);
+}
+
 void setup() {
     Serial.begin(9600);
     SPI.begin();
     encoder1.begin();
     encoder2.begin();
     encoder3.begin();
-    pinMode(pwm, OUTPUT);
-    pinMode(dirFwd, OUTPUT);
-    pinMode(dirBkwd, OUTPUT);
+    pinMode(pwm1, OUTPUT);
+    pinMode(dirFwd1, OUTPUT);
+    pinMode(dirBkwd1, OUTPUT);
+    pinMode(pwm2, OUTPUT);
+    pinMode(dirFwd2, OUTPUT);
+    pinMode(dirBkwd2, OUTPUT);
+    pinMode(pwm3, OUTPUT);
+    pinMode(dirFwd3, OUTPUT);
+    pinMode(dirBkwd3, OUTPUT);
 
-    controller.set(-685);
+    encoder1.clear();
+    encoder2.clear();
+    encoder3.clear();
+
+    senseMotors();
+
+    delay(1000);
+
+    setMotor(1, 100);
+    setMotor(2, 100);
+    setMotor(3, 100);
 }
 
 void loop() {
     unsigned long this_micros = micros();
-    // Serial.print(encoder1.velocity());
-    // Serial.print(", ");
-    // Serial.print(encoder2.velocity());
-    // Serial.print(", ");
-    // Serial.println(encoder3.velocity());
-
-    Serial.print(encoder3.velocity());
+    Serial.print(encoder1.velocity());
     Serial.print(", ");
-    Serial.println(setMotor(controller.getCommand()));
+    Serial.print(encoder2.velocity());
+    Serial.print(", ");
+    Serial.println(encoder3.velocity());
+
+    // setMotor(2, controller.getCommand());
+    // setMotor(1, 100);
+
+    // Serial.print(encoder3.velocity());
+    // Serial.print(", ");
+    // Serial.println(setMotor(controller.getCommand()));
     // Serial.println(controller.getSetpoint());
     
     // setMotor(-300);
@@ -67,6 +143,6 @@ void loop() {
     encoder1.update();
     encoder2.update();
     encoder3.update();
-    controller.update(encoder3.velocity(), this_micros - last_micros);
+    // controller.update(encoder2.velocity(), this_micros - last_micros);
     last_micros = this_micros;
 }

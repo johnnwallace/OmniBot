@@ -28,8 +28,8 @@ void Encoder::update() {
     unsigned long this_counts = read();
     
     // calculate new velocity
-    double new_velo = (double)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * 1000000 * scale;
-    
+    float new_velo = (float)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * scale * 1000000;
+
     // update filter
     velo = (1 - alpha) * new_velo + alpha * velo;
 
@@ -52,9 +52,12 @@ void Encoder::clear() {
 
     last_counts = 0;
     last_micros = micros();
+
+    // Serial.println("clearing");
+    delay(100);
 }
 
-Encoder::Encoder(int cs, double alpha, double scale) {
+Encoder::Encoder(int cs, float alpha, int scale) {
     this->cs = cs;
     this->alpha = alpha;
     this->scale = scale;
