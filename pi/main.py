@@ -108,7 +108,7 @@ try:
                 ## cv2.circle(color_image, (int(cx), int(cy)), 5, (255, 255, 255), -1)
                 ## cv2.circle(depth_image, (verticleside1_pixel_x, cy), 5, (255, 255, 255), -1)
                 ## cv2.circle(depth_image, (verticleside2_pixel_x, cy), 5, (255, 255, 255), -1)
-                dataArray = [cx, cy, depth_value, deg_angle]
+                ## dataArray = [cx, cy, depth_value, deg_angle]
 
                 # print(dataArray)
                 while ser.in_waiting > 0:
@@ -122,7 +122,7 @@ try:
 
 
         # Display the resulting frame
-        cv2.imshow('Color Frame', color_image)
+        ## cv2.imshow('Color Frame', color_image)
         ## depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         ## cv2.imshow('Depth Frame', depth_colormap)
 
