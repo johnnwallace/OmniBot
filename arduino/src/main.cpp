@@ -16,7 +16,9 @@ Encoder encoder3(A2, 0.9, 1);
 
 // wheel 1 encoder sometimes scaled by -4
 
-PID controller(1.4, 0.00001, 0.1, -685, 685); // motor 3 forward
+PID controller1(1.4, 0.000003, 0.1, -685, 685);
+PID controller2(1.4, 0.000003, 0.1, -685, 685);
+PID controller3(1.4, 0.000003, 0.1, -685, 685); // motor 3 forward
 // PID controller(2, 0.000003, 0, -685, 685); // motor 3 backward
 
 unsigned long last_micros;
@@ -83,9 +85,12 @@ void senseMotors() {
         encoder1.setScale(-0.25);
     }
 
-    setMotor(1, 0);
-    setMotor(2, 0);
-    setMotor(3, 0);
+    digitalWrite(dirFwd1, LOW);
+    digitalWrite(dirBkwd1, LOW);
+    digitalWrite(dirFwd2, LOW);
+    digitalWrite(dirBkwd2, LOW);
+    digitalWrite(dirFwd3, LOW);
+    digitalWrite(dirBkwd3, LOW);
 }
 
 void setup() {
@@ -104,17 +109,21 @@ void setup() {
     pinMode(dirFwd3, OUTPUT);
     pinMode(dirBkwd3, OUTPUT);
 
+    senseMotors();
+
+    delay(2000);
+
     encoder1.clear();
     encoder2.clear();
     encoder3.clear();
 
-    senseMotors();
+    controller1.clear();
+    controller2.clear();
+    controller3.clear();
 
-    delay(1000);
-
-    setMotor(1, 100);
-    setMotor(2, 100);
-    setMotor(3, 100);
+    controller1.set(100);
+    controller2.set(100);
+    controller3.set(100);
 }
 
 void loop() {
@@ -125,24 +134,17 @@ void loop() {
     Serial.print(", ");
     Serial.println(encoder3.velocity());
 
-    // setMotor(2, controller.getCommand());
-    // setMotor(1, 100);
-
-    // Serial.print(encoder3.velocity());
-    // Serial.print(", ");
-    // Serial.println(setMotor(controller.getCommand()));
-    // Serial.println(controller.getSetpoint());
-    
-    // setMotor(-300);
-
-    // if (this_micros > 5000000) {
-    //     controller.set(-200);
-    
-    // }
+    setMotor(1, controller1.getCommand());
+    setMotor(2, controller2.getCommand());
+    setMotor(3, controller3.getCommand());
 
     encoder1.update();
     encoder2.update();
     encoder3.update();
-    // controller.update(encoder2.velocity(), this_micros - last_micros);
+
+    controller1.update(encoder1.velocity(), this_micros - last_micros);
+    controller2.update(encoder2.velocity(), this_micros - last_micros);
+    controller3.update(encoder3.velocity(), this_micros - last_micros);
+
     last_micros = this_micros;
 }

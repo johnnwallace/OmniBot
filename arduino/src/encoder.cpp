@@ -50,7 +50,8 @@ void Encoder::clear() {
     SPI.transfer(0x00);
     digitalWrite(cs,HIGH);
 
-    last_counts = 0;
+    velo = 0;
+    last_counts = read();
     last_micros = micros();
 
     // Serial.println("clearing");

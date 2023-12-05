@@ -13,6 +13,9 @@ class PID{
     bool clamped;
 
 public:
+    // Clears history
+    void clear();
+
     // Update setpoint
     void set(int setpoint);
 

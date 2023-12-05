@@ -1,5 +1,14 @@
-#include "utils.h"
 #include "pid.h"
+
+#include "utils.h"
+#include <Arduino.h>
+
+void PID::clear() {
+    lastError = 0;
+    error = 0;
+    cumulativeError = 0;
+    derivativeError = 0;
+}
 
 void PID::set(int setpoint) {
     this->setpoint = setpoint;
