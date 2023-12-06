@@ -166,4 +166,12 @@ void loop() {
 
     free(data);
     data = readData();
+
+    // Serial.print(data[0]);
+    // Serial.print(", ");
+    // Serial.print(data[1]);
+    // Serial.print(", ");
+    // Serial.print(data[2]);
+    // Serial.print(", ");
+    // Serial.println(data[3]);
 }

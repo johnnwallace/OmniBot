@@ -20,14 +20,6 @@ float* readData() {
 
             float angle = atof(command);
 
-            Serial.print(cx);
-            Serial.print(", ");
-            Serial.print(cy);
-            Serial.print(", ");
-            Serial.print(depth);
-            Serial.print(", ");
-            Serial.println(angle);
-
             return new float[4]{(float)cx, (float)cy, depth, angle};
         }
     }
