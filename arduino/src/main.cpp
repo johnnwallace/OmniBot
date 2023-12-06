@@ -10,17 +10,9 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A3, 0.9, 1);
 Encoder encoder3(A2, 0.9, 1);
 
-// MOTOR GAINS
-// 1: 
-// 2: 1.4, 0.00001, 0.1 (no switch)
-// 3: 1.4, 0.00001, 0.1 (motor switch)
-
-// wheel 1 encoder sometimes scaled by -4
-
 PID controller1(1.4, 0.000003, 0.1, -685, 685);
 PID controller2(1.4, 0.000003, 0.1, -685, 685);
-PID controller3(1.4, 0.000003, 0.1, -685, 685); // motor 3 forward
-// PID controller(2, 0.000003, 0, -685, 685); // motor 3 backward
+PID controller3(1.4, 0.000003, 0.1, -685, 685);
 
 float globalVelo[3] = {0.0, 0.0, 100.0};
 float* wheelVelos;
