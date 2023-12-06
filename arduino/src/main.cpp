@@ -21,7 +21,7 @@ PID controller2(1.4, 0.000003, 0.1, -685, 685);
 PID controller3(1.4, 0.000003, 0.1, -685, 685); // motor 3 forward
 // PID controller(2, 0.000003, 0, -685, 685); // motor 3 backward
 
-float globalVelo[3] = {1.0, 0.0, 0.0};
+float globalVelo[3] = {0.0, 0.0, 100.0};
 float* wheelVelos;
 
 unsigned long last_micros;
@@ -124,14 +124,16 @@ void setup() {
     controller2.clear();
     controller3.clear();
 
-    wheelVelos = getWheelVelos(globalVelo, 0.1);
-    Serial.println(wheelVelos[0]);
-    Serial.println(wheelVelos[1]);
+    wheelVelos = getWheelVelos(globalVelo, .397);
+    Serial.print(wheelVelos[0]);
+    Serial.print(", ");
+    Serial.print(wheelVelos[1]);
+    Serial.print(", ");
     Serial.println(wheelVelos[2]);
 
-    controller1.set(0);
-    controller2.set(0);
-    controller3.set(0);
+    controller1.set(wheelVelos[0]);
+    controller2.set(wheelVelos[1]);
+    controller3.set(wheelVelos[2]);
 }
 
 void loop() {
