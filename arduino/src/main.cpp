@@ -4,6 +4,7 @@
 #include "encoder.h"
 #include "pid.h"
 #include "utils.h"
+#include "comm.h"
 
 Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A3, 0.9, 1);
@@ -23,6 +24,7 @@ PID controller3(1.4, 0.000003, 0.1, -685, 685); // motor 3 forward
 
 float globalVelo[3] = {0.0, 0.0, 100.0};
 float* wheelVelos;
+float* data;
 
 unsigned long last_micros;
 
@@ -125,15 +127,19 @@ void setup() {
     controller3.clear();
 
     wheelVelos = getWheelVelos(globalVelo, .397);
-    Serial.print(wheelVelos[0]);
-    Serial.print(", ");
-    Serial.print(wheelVelos[1]);
-    Serial.print(", ");
-    Serial.println(wheelVelos[2]);
+    // Serial.print(wheelVelos[0]);
+    // Serial.print(", ");
+    // Serial.print(wheelVelos[1]);
+    // Serial.print(", ");
+    // Serial.println(wheelVelos[2]);
 
-    controller1.set(wheelVelos[0]);
-    controller2.set(wheelVelos[1]);
-    controller3.set(wheelVelos[2]);
+    // controller1.set(wheelVelos[0]);
+    // controller2.set(wheelVelos[1]);
+    // controller3.set(wheelVelos[2]);
+
+    controller1.set(0);
+    controller2.set(0);
+    controller3.set(0);
 }
 
 void loop() {
@@ -157,4 +163,7 @@ void loop() {
     controller3.update(encoder3.velocity(), this_micros - last_micros);
 
     last_micros = this_micros;
+
+    free(data);
+    data = readData();
 }

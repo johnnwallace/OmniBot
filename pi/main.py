@@ -84,7 +84,7 @@ try:
                 verticleside1_pixel_x = cx + (width/2.1)
                 verticleside2_pixel_x = cx - (width/2.1)
 
-                cy =int(cy)
+                cy = int(cy)
                 cx = int(cx)
                 verticleside1_pixel_x = int(verticleside1_pixel_x)
                 verticleside2_pixel_x = int(verticleside2_pixel_x)
