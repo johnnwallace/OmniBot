@@ -84,7 +84,7 @@ try:
                 verticleside1_pixel_x = cx + (width/2.1)
                 verticleside2_pixel_x = cx - (width/2.1)
 
-                cy = int(cy)
+                cy =int(cy)
                 cx = int(cx)
                 verticleside1_pixel_x = int(verticleside1_pixel_x)
                 verticleside2_pixel_x = int(verticleside2_pixel_x)
@@ -112,13 +112,10 @@ try:
 
                 # print(dataArray)
                 while ser.in_waiting > 0:
-                    print(ser.readline().decode('utf-8'))
-                    # ser.readline().decode('utf-8')
-                # ser.write("hello\n".encode('utf-8'))
-                ser.write(("cx: " + str(cx) + "\n").encode('utf-8'))
-                ser.write(("cy: " + str(cy) + "\n").encode('utf-8'))
-                ser.write(("depth: " + str(depth_value) + "\n").encode('utf-8'))
-                ser.write(("angle: " + str(deg_angle) + "\n").encode('utf-8'))
+                    print(ser.readline().strip().decode('utf-8'))
+                ser.write((str(cx) + " " + str(cy) + " " +
+                           str(depth_value) + " " + str(deg_angle) + "\n")
+                           .encode('utf-8'))
 
 
         # Display the resulting frame
