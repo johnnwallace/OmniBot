@@ -5,10 +5,11 @@ cap = cv2.VideoCapture(0)
 
 while(True):
     # Capture frame-by-frame
-    ret, frame = cap.read()
+    _, frame = cap.read()
 
     # Our operations on the frame come here
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    color_image_smoothed = cv2.GaussianBlur(frame, (5, 5), 0)
+    gray = cv2.cvtColor(color_image_smoothed, cv2.COLOR_BGR2HSV)
 
     # Display the resulting frame
     cv2.imshow('frame',frame)

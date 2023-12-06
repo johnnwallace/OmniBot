@@ -43,6 +43,11 @@ try:
         color_image = np.asanyarray(color_frame.get_data())
         depth_image = np.asanyarray(depth_frame.get_data())
 
+        im_width = color_image.shape[1]
+        im_height = color_image.shape[0]
+
+        # print(width, height)
+
         # Convert BGR to HSV
         color_image_smoothed = cv2.GaussianBlur(color_image, (5, 5), 0)
         hsv = cv2.cvtColor(color_image_smoothed, cv2.COLOR_BGR2HSV)
@@ -84,8 +89,11 @@ try:
                 verticleside1_pixel_x = cx + (width/2.1)
                 verticleside2_pixel_x = cx - (width/2.1)
 
-                cy =int(cy)
                 cx = int(cx)
+                cy = int(cy)
+                cx_translated = int(0.5 * im_width) - cx  # center is 0
+                cy_translated = int(0.5 * im_height) - cy  # center is 0
+
                 verticleside1_pixel_x = int(verticleside1_pixel_x)
                 verticleside2_pixel_x = int(verticleside2_pixel_x)
 
@@ -112,8 +120,9 @@ try:
 
                 # print(dataArray)
                 while ser.in_waiting > 0:
-                    print(ser.readline().strip().decode('utf-8'))
-                ser.write((str(cx) + " " + str(cy) + " " +
+                    read = ser.readline().strip().decode('utf-8')
+                    print(read)
+                ser.write((str(cx_translated) + " " + str(cy_translated) + " " +
                            str(depth_value) + " " + str(deg_angle) + "\n")
                            .encode('utf-8'))
 
