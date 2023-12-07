@@ -10,9 +10,9 @@ Encoder encoder1(A1, 0.9, 1);
 Encoder encoder2(A3, 0.9, 1);
 Encoder encoder3(A2, 0.9, 1);
 
-PID controller1(1.4, 0.000003, 0.1, -685, 685);
-PID controller2(1.4, 0.000003, 0.1, -685, 685);
-PID controller3(1.4, 0.000003, 0.1, -685, 685);
+PID controller1(1.4, 3, 0, -685, 685);
+PID controller2(1.4, 3, 0, -685, 685);
+PID controller3(1.4, 3, 0, -685, 685);
 
 PID controllerX(1, 0, 0, -1000, 1000);
 
@@ -33,6 +33,8 @@ unsigned int dirBkwd2 = 7;
 unsigned int pwm3 = 9;
 unsigned int dirFwd3 = 8;
 unsigned int dirBkwd3 = 10;
+
+unsigned long count = 0;
 
 double setMotor(int motor, double command) {
     unsigned int pwm, dirFwd, dirBkwd;
@@ -82,6 +84,12 @@ void senseMotors() {
 
     if (encoder1.velocity() < 0) {
         encoder1.setScale(-0.25);
+    }
+    if (encoder2.velocity() < 0) {
+        encoder2.setScale(-0.25);
+    }
+    if (encoder3.velocity() < 0) {
+        encoder3.setScale(-0.25);
     }
 
     digitalWrite(dirFwd1, LOW);
@@ -151,53 +159,52 @@ void loop() {
     // Serial.print(", ");
     // Serial.println(encoder3.velocity());
 
-    // setMotor(1, controller1.getCommand());
-    // setMotor(2, controller2.getCommand());
-    // setMotor(3, controller3.getCommand());
+    setMotor(1, controller1.getCommand());
+    setMotor(2, controller2.getCommand());
+    setMotor(3, controller3.getCommand());
 
+    // Serial.print(this_micros - last_micros);
+    // Serial.print(", ");
     encoder1.update();
     encoder2.update();
     encoder3.update();
 
     // update low level PIDs
-    // controller1.update(encoder1.velocity(), this_micros - last_micros);
-    // controller2.update(encoder2.velocity(), this_micros - last_micros);
-    // controller3.update(encoder3.velocity(), this_micros - last_micros);
+    controller1.update(encoder1.velocity(), this_micros - last_micros);
+    controller2.update(encoder2.velocity(), this_micros - last_micros);
+    controller3.update(encoder3.velocity(), this_micros - last_micros);
 
     // update global velocity PID
     // Serial.print(data[0]);
     controllerX.update(data[0], this_micros - last_micros);
     globalVelo[1] = controllerX.getCommand();
 
-    if (Serial.available() > 0) {
-        data = readData();
+    if (count % 100 == 0) {
+        if (Serial.available() > 0) {
+            data = readData();
+        }
     }
 
-    // Serial.println(data[0]);
+    // Serial.print(data[0]);
     // Serial.print(", ");
-    // Serial.println(controllerX.getCommand());
     // Serial.print(data[1]);
     // Serial.print(", ");
     // Serial.print(data[2]);
     // Serial.print(", ");
     // Serial.println(data[3]);
-    // Serial.print(data[0]);
-    // Serial.print(", ");
-    // Serial.print(controllerX.getCommand());
-    // Serial.println(":");
 
     wheelVelos = getWheelVelos(globalVelo, .397);
-    // controller1.set(wheelVelos[0]);
-    // controller2.set(wheelVelos[1]);
-    // controller3.set(wheelVelos[2]);
-    setMotor(1, wheelVelos[0]);
-    setMotor(2, wheelVelos[1]);
-    setMotor(3, wheelVelos[2]);
-    // Serial.print(globalVelo[0]);
+    controller1.set(wheelVelos[0]);
+    controller2.set(wheelVelos[1]);
+    controller3.set(wheelVelos[2]);
+    // setMotor(1, wheelVelos[0]);
+    // setMotor(2, wheelVelos[1]);
+    // setMotor(3, wheelVelos[2]);
+    // Serial.println(controller1.getCommand());
     // Serial.print(", ");
-    // Serial.print(globalVelo[1]);
+    // Serial.print(controller2.getCommand());
     // Serial.print(", ");
-    // Serial.println(globalVelo[2]);
+    // Serial.println(controller3.getCommand());
 
     // Serial.print(wheelVelos[0]);
     // Serial.print(", ");
@@ -207,4 +214,6 @@ void loop() {
     // Serial.println("\n");
 
     last_micros = this_micros;
+    count++;
+    // delay(100);
 }

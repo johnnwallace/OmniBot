@@ -22,10 +22,10 @@ void PID::update(float state, float dt) {
     this->lastError = error;
     this->error = setpoint - state;
     // this->cumulativeError += error * dt * (error / setpoint < 0.3);
-    this->cumulativeError += error * dt;
-    this->derivativeError = (error - lastError)/dt;
+    this->cumulativeError += error * dt / 1000000;
+    this->derivativeError = (error - lastError)/dt * 1000000;
 
-    // Serial.print(dt);
+    // Serial.print(state);
     // Serial.print(", ");
     // Serial.println(error);
     // Serial.print(", ");

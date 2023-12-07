@@ -27,6 +27,9 @@ void Encoder::update() {
     unsigned long this_micros = micros();
     unsigned long this_counts = read();
     
+    // Serial.println((long)this_micros - (long)last_micros);
+    // Serial.println((long)this_counts - (long)last_counts);
+
     // calculate new velocity
     float new_velo = (float)((long)this_counts - (long)last_counts) / ((long)this_micros - (long)last_micros) * scale * 1000000;
 
