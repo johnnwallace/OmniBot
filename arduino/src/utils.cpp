@@ -14,7 +14,7 @@ float clamp(float val, float min, float max) {
 
 float* getWheelVelos(float worldVelo[3], float wheelbase) {
     float omega_term = wheelbase*worldVelo[2];
-    float* wheel_velos = new float[3];
+    static float wheel_velos[3];
     wheel_velos[0] = -0.5 * worldVelo[1] - 0.866 * worldVelo[0] + omega_term;
     wheel_velos[1] = -0.5 * worldVelo[1] + 0.866 * worldVelo[0] + omega_term;
     wheel_velos[2] = worldVelo[1] + omega_term;

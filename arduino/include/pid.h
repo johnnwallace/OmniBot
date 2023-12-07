@@ -2,7 +2,7 @@
 
 class PID{
     float gains[3];
-    int limit[2];
+    float limit[2];
     int setpoint;
     int command;
 

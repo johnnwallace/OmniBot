@@ -14,7 +14,9 @@ PID controller1(1.4, 0.000003, 0.1, -685, 685);
 PID controller2(1.4, 0.000003, 0.1, -685, 685);
 PID controller3(1.4, 0.000003, 0.1, -685, 685);
 
-float globalVelo[3] = {0.0, 0.0, 100.0};
+PID controllerX(1, 0, 0, -1000, 1000);
+
+float globalVelo[3] = {0.0, 0.0, 0.0};
 float* wheelVelos;
 float* data;
 
@@ -132,9 +134,16 @@ void setup() {
     controller1.set(0);
     controller2.set(0);
     controller3.set(0);
+    controllerX.set(0);
 }
 
 void loop() {
+    // while (!Serial.available()) {
+    //     controller1.set(0);
+    //     controller2.set(0);
+    //     controller3.set(0);
+    // }
+
     unsigned long this_micros = micros();
     // Serial.print(encoder1.velocity());
     // Serial.print(", ");
@@ -150,20 +159,47 @@ void loop() {
     encoder2.update();
     encoder3.update();
 
+    // update low level PIDs
     controller1.update(encoder1.velocity(), this_micros - last_micros);
     controller2.update(encoder2.velocity(), this_micros - last_micros);
     controller3.update(encoder3.velocity(), this_micros - last_micros);
 
-    last_micros = this_micros;
-
-    free(data);
-    data = readData();
-
+    // update global velocity PID
     // Serial.print(data[0]);
-    // Serial.print(", ");
+    controllerX.update(data[0], this_micros - last_micros);
+    globalVelo[1] = controllerX.getCommand();
+
+    if (Serial.available() > 0) {
+        data = readData();
+    }
+
+    Serial.print(data[0]);
+    Serial.print(", ");
+    Serial.println(controllerX.getCommand());
     // Serial.print(data[1]);
     // Serial.print(", ");
     // Serial.print(data[2]);
     // Serial.print(", ");
     // Serial.println(data[3]);
+    // Serial.print(data[0]);
+    // Serial.print(", ");
+    // Serial.print(controllerX.getCommand());
+    // Serial.println(":");
+
+    wheelVelos = getWheelVelos(globalVelo, .397);
+    controller1.set(wheelVelos[0]);
+    controller2.set(wheelVelos[1]);
+    controller3.set(wheelVelos[2]);
+
+    // Serial.print(wheelVelos[0]);
+    // Serial.print(", ");
+    // Serial.print(controller1.getCommand());
+    // Serial.print(", ");
+    // Serial.println(encoder1.velocity());
+    // Serial.print(wheelVelos[1]);
+    // Serial.print(", ");
+    // Serial.print(wheelVelos[2]);
+    // Serial.println("\n");
+
+    last_micros = this_micros;
 }

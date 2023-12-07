@@ -21,8 +21,17 @@ int PID::getSetpoint() {
 void PID::update(float state, float dt) {
     this->lastError = error;
     this->error = setpoint - state;
-    this->cumulativeError += error * dt * (error / setpoint < 0.3);
+    // this->cumulativeError += error * dt * (error / setpoint < 0.3);
+    this->cumulativeError += error * dt;
     this->derivativeError = (error - lastError)/dt;
+
+    // Serial.print(dt);
+    // Serial.print(", ");
+    // Serial.print(error);
+    // Serial.print(", ");
+    // Serial.print(cumulativeError);
+    // Serial.print(", ");
+    // Serial.println(derivativeError);
 
     float unclamped = this->gains[0] * this->error
                     + this->gains[1] * this->cumulativeError
