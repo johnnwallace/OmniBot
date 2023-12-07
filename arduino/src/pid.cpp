@@ -27,7 +27,7 @@ void PID::update(float state, float dt) {
 
     // Serial.print(dt);
     // Serial.print(", ");
-    // Serial.print(error);
+    // Serial.println(error);
     // Serial.print(", ");
     // Serial.print(cumulativeError);
     // Serial.print(", ");
@@ -37,8 +37,11 @@ void PID::update(float state, float dt) {
                     + this->gains[1] * this->cumulativeError
                     + this->gains[2] * this->derivativeError;
 
+    // Serial.println(unclamped);
+
     if (this->clamped) {
-        this->command = clamp(unclamped, this->limit[0], this->limit[1]);
+        float clamped = clamp(unclamped, this->limit[0], this->limit[1]);
+        this->command = clamped;
     } else {
         this->command = unclamped;
     }

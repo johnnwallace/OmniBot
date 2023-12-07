@@ -93,7 +93,7 @@ void senseMotors() {
 }
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
     SPI.begin();
     encoder1.begin();
     encoder2.begin();
@@ -151,18 +151,18 @@ void loop() {
     // Serial.print(", ");
     // Serial.println(encoder3.velocity());
 
-    setMotor(1, controller1.getCommand());
-    setMotor(2, controller2.getCommand());
-    setMotor(3, controller3.getCommand());
+    // setMotor(1, controller1.getCommand());
+    // setMotor(2, controller2.getCommand());
+    // setMotor(3, controller3.getCommand());
 
     encoder1.update();
     encoder2.update();
     encoder3.update();
 
     // update low level PIDs
-    controller1.update(encoder1.velocity(), this_micros - last_micros);
-    controller2.update(encoder2.velocity(), this_micros - last_micros);
-    controller3.update(encoder3.velocity(), this_micros - last_micros);
+    // controller1.update(encoder1.velocity(), this_micros - last_micros);
+    // controller2.update(encoder2.velocity(), this_micros - last_micros);
+    // controller3.update(encoder3.velocity(), this_micros - last_micros);
 
     // update global velocity PID
     // Serial.print(data[0]);
@@ -173,9 +173,9 @@ void loop() {
         data = readData();
     }
 
-    Serial.print(data[0]);
-    Serial.print(", ");
-    Serial.println(controllerX.getCommand());
+    // Serial.println(data[0]);
+    // Serial.print(", ");
+    // Serial.println(controllerX.getCommand());
     // Serial.print(data[1]);
     // Serial.print(", ");
     // Serial.print(data[2]);
@@ -187,15 +187,20 @@ void loop() {
     // Serial.println(":");
 
     wheelVelos = getWheelVelos(globalVelo, .397);
-    controller1.set(wheelVelos[0]);
-    controller2.set(wheelVelos[1]);
-    controller3.set(wheelVelos[2]);
+    // controller1.set(wheelVelos[0]);
+    // controller2.set(wheelVelos[1]);
+    // controller3.set(wheelVelos[2]);
+    setMotor(1, wheelVelos[0]);
+    setMotor(2, wheelVelos[1]);
+    setMotor(3, wheelVelos[2]);
+    // Serial.print(globalVelo[0]);
+    // Serial.print(", ");
+    // Serial.print(globalVelo[1]);
+    // Serial.print(", ");
+    // Serial.println(globalVelo[2]);
 
     // Serial.print(wheelVelos[0]);
     // Serial.print(", ");
-    // Serial.print(controller1.getCommand());
-    // Serial.print(", ");
-    // Serial.println(encoder1.velocity());
     // Serial.print(wheelVelos[1]);
     // Serial.print(", ");
     // Serial.print(wheelVelos[2]);
