@@ -3,7 +3,7 @@
 class PID{
     float gains[3];
     float limit[2];
-    int setpoint;
+    float setpoint;
     int command;
 
     float error;
@@ -17,10 +17,10 @@ public:
     void clear();
 
     // Update setpoint
-    void set(int setpoint);
+    void set(float setpoint);
 
     // Return current setpoint
-    int getSetpoint();
+    float getSetpoint();
 
     // Update errors and the resulting command
     void update(float state, float dt);

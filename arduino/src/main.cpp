@@ -14,7 +14,9 @@ PID controller1(1.4, 3, 0, -685, 685);
 PID controller2(1.4, 3, 0, -685, 685);
 PID controller3(1.4, 3, 0, -685, 685);
 
-PID controllerX(1, 0, 0, -1000, 1000);
+PID controllerX(1, 0, 0.1, -1000, 1000);
+PID controllerY(300, 0, 0, -1000, 1000);
+PID controllerW(6, 0, 0, -1000, 1000);
 
 float globalVelo[3] = {0.0, 0.0, 0.0};
 float* wheelVelos;
@@ -143,6 +145,8 @@ void setup() {
     controller2.set(0);
     controller3.set(0);
     controllerX.set(0);
+    controllerY.set(1);
+    controllerW.set(0);
 }
 
 void loop() {
@@ -175,9 +179,12 @@ void loop() {
     controller3.update(encoder3.velocity(), this_micros - last_micros);
 
     // update global velocity PID
-    // Serial.print(data[0]);
     controllerX.update(data[0], this_micros - last_micros);
+    controllerW.update(data[3], this_micros - last_micros);
+    controllerY.update(data[2], this_micros - last_micros);
     globalVelo[1] = controllerX.getCommand();
+    // globalVelo[2] = controllerW.getCommand();
+    globalVelo[0] = -controllerY.getCommand();
 
     if (count % 100 == 0) {
         if (Serial.available() > 0) {
@@ -185,9 +192,9 @@ void loop() {
         }
     }
 
-    // Serial.print(data[0]);
+    // Serial.print(data[2]);
     // Serial.print(", ");
-    // Serial.print(data[1]);
+    // Serial.println(controllerY.getCommand());
     // Serial.print(", ");
     // Serial.print(data[2]);
     // Serial.print(", ");

@@ -10,11 +10,11 @@ void PID::clear() {
     derivativeError = 0;
 }
 
-void PID::set(int setpoint) {
+void PID::set(float setpoint) {
     this->setpoint = setpoint;
 }
 
-int PID::getSetpoint() {
+float PID::getSetpoint() {
     return this->setpoint;
 }
 
@@ -27,7 +27,8 @@ void PID::update(float state, float dt) {
 
     // Serial.print(state);
     // Serial.print(", ");
-    // Serial.println(error);
+    // Serial.print(error);
+    // Serial.print(", ");
     // Serial.print(", ");
     // Serial.print(cumulativeError);
     // Serial.print(", ");
