@@ -3,6 +3,10 @@ import numpy as np
 import pyrealsense2 as rs
 import serial
 import time
+import os
+import statistics
+
+angles = []
 
 # Configure RealSense pipeline
 pipeline = rs.pipeline()
@@ -20,9 +24,14 @@ align_to = rs.stream.color
 align = rs.align(align_to)
 
 # serial input/output info
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+while not os.path.exists('/dev/ttyACM0'):
+    1
+time.sleep(1)
+ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 time.sleep(1) # might need to address
 ser.reset_input_buffer()
+
+last_rad_angle = -1
 
 try:
     while True:
@@ -91,8 +100,8 @@ try:
 
                 cx = int(cx)
                 cy = int(cy)
-                cx_translated = int(0.5 * im_width) - cx  # center is 0
-                cy_translated = int(0.5 * im_height) - cy  # center is 0
+                cx_translated = -(int(0.5 * im_width) - cx)  # center is 0
+                cy_translated = -(int(0.5 * im_height) - cy)  # center is 0
 
                 verticleside1_pixel_x = int(verticleside1_pixel_x)
                 verticleside2_pixel_x = int(verticleside2_pixel_x)
@@ -109,26 +118,35 @@ try:
 
                 depth_diff = side1_depth_p - side2_depth_p ## red is side1
 
+                if last_rad_angle == -1:
+                    last_rad_angle = np.arctan(depth_diff/width)
+                    rad_angle = last_rad_angle
+                    
                 rad_angle = np.arctan(depth_diff/width)
-                deg_angle = np.degrees(rad_angle)
-                deg_angle = round(deg_angle, 3)
+                if abs(rad_angle - last_rad_angle) > 0.7:
+                    rad_angle = last_rad_angle
+                else:
+                    last_rad_angle = rad_angle
 
-                ## cv2.circle(color_image, (int(cx), int(cy)), 5, (255, 255, 255), -1)
-                ## cv2.circle(depth_image, (verticleside1_pixel_x, cy), 5, (255, 255, 255), -1)
-                ## cv2.circle(depth_image, (verticleside2_pixel_x, cy), 5, (255, 255, 255), -1)
+                ##cv2.circle(color_image, (int(cx), int(cy)), 5, (255, 255, 255), -1)
+                ##cv2.circle(color_image, (verticleside1_pixel_x, cy), 5, (255, 255, 255), -1)
+                ##cv2.circle(color_image, (verticleside2_pixel_x, cy), 5, (255, 255, 255), -1)
                 ## dataArray = [cx, cy, depth_value, deg_angle]
 
-                # print(dataArray)
                 while ser.in_waiting > 0:
-                    read = ser.readline().strip().decode('utf-8')
+                    try:
+                        read = ser.readline().strip().decode('utf-8')
+                    except Exception:
+                        pass
                     print(read)
                 ser.write((str(cx_translated) + " " + str(cy_translated) + " " +
-                           str(depth_value) + " " + str(deg_angle) + "\n")
+                           str(depth_value) + " " + str(round(rad_angle, 6)) + "\n")
                            .encode('utf-8'))
 
+                # print("hello")
 
         # Display the resulting frame
-        ## cv2.imshow('Color Frame', color_image)
+        # cv2.imshow('Color Frame', color_image)
         ## depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         ## cv2.imshow('Depth Frame', depth_colormap)
 
