@@ -111,7 +111,8 @@ try:
                 depth_value = round(depth_value, 3)
                 if depth_value > 3:
                     continue
-
+                    
+                # if outside of frame continue?
                 side1_depth_m = depth_frame.get_distance(verticleside1_pixel_x, cy)
                 side2_depth_m = depth_frame.get_distance(verticleside2_pixel_x, cy)
 
@@ -130,10 +131,11 @@ try:
                 else:
                     last_rad_angle = rad_angle
 
-                ##cv2.circle(color_image, (int(cx), int(cy)), 5, (255, 255, 255), -1)
-                ##cv2.circle(color_image, (verticleside1_pixel_x, cy), 5, (255, 255, 255), -1)
-                ##cv2.circle(color_image, (verticleside2_pixel_x, cy), 5, (255, 255, 255), -1)
-                ## dataArray = [cx, cy, depth_value, deg_angle]
+                #cv2.circle(color_image, (int(cx), int(cy)), 5, (255, 255, 255), -1)
+                #cv2.circle(color_image, (verticleside1_pixel_x, cy), 5, (255, 255, 255), -1)
+                #cv2.circle(color_image, (verticleside2_pixel_x, cy), 5, (255, 255, 255), -1)
+                #dataArray = [cx, cy, depth_value, rad_angle]
+                #print(dataArray)
 
                 while ser.in_waiting > 0:
                     try:
@@ -142,13 +144,12 @@ try:
                         pass
                     print(read)
                 ser.write((str(cx_translated) + " " + str(cy_translated) + " " +
-                           str(depth_value) + " " + str(round(rad_angle, 6)) + "\n")
-                           .encode('utf-8'))
+                           str(depth_value) + " " + str(round(rad_angle, 6)) + "\n").encode('utf-8'))
 
                 # print("hello")
 
         # Display the resulting frame
-        # cv2.imshow('Color Frame', color_image)
+        #cv2.imshow('Color Frame', color_image)
         ## depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         ## cv2.imshow('Depth Frame', depth_colormap)
 
