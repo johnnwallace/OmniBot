@@ -71,7 +71,7 @@ try:
         # Find contours in the mask
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        min_contour_area = 500  # Adjust based on your image size and characteristics
+        min_contour_area = 150  # Adjust based on your image size and characteristics
         filtered_contours = [contour for contour in contours if cv2.contourArea(contour) > min_contour_area]
 
         # Iterate through the contours and find the square
@@ -109,6 +109,8 @@ try:
                 # Get the depth value at the centroid from the depth frame
                 depth_value = depth_frame.get_distance(cx, cy)
                 depth_value = round(depth_value, 3)
+                if depth_value > 3:
+                    continue
 
                 side1_depth_m = depth_frame.get_distance(verticleside1_pixel_x, cy)
                 side2_depth_m = depth_frame.get_distance(verticleside2_pixel_x, cy)
