@@ -14,7 +14,7 @@ PID controller1(1.4, 3, 0, -685, 685);
 PID controller2(1.4, 3, 0, -685, 685);
 PID controller3(1.4, 3, 0, -685, 685);
 
-PID controllerY(2, 0, 0.1, -1000, 1000);
+PID controllerY(1.3, 0, 0.1, -1000, 1000);
 PID controllerX(600, 0, 0, -1000, 1000);
 PID controllerW(200, 0, 1, -1000, 1000);
 
@@ -179,18 +179,21 @@ void loop() {
     controller3.update(encoder3.velocity(), this_micros - last_micros);
 
     // update global velocity PID
-    if (data[2] < 0.15) {
-        controllerY.update(data[0], this_micros - last_micros);
-    }
+    // controllerY.update(data[0], this_micros - last_micros);
+    controllerY.update(data[0], this_micros - last_micros);
     controllerW.update(data[3], this_micros - last_micros);
     controllerX.update(data[2], this_micros - last_micros);
 
+    // globalVelo[1] = controllerY.getCommand();
     globalVelo[0] = -controllerX.getCommand();
-    globalVelo[1] = controllerW.getCommand() * (data[2] + 0.2) * 1.3;
-    if (data[2] < 0.09) {
-        globalVelo[1] += controllerY.getCommand();
-    }
+    globalVelo[1] = controllerW.getCommand() * (data[2] + 0.2) * 1.3 + controllerY.getCommand();;
+    // if (data[2] < 0.09) {
+    //     globalVelo[1] += controllerY.getCommand();
+    // }
     globalVelo[2] = controllerW.getCommand();
+    // globalVelo[0] = 0;
+    // globalVelo[1] = 100.0;
+    // globalVelo[2] = 0;
     // globalVelo[1] = controllerX.getCommand();
     // globalVelo[0] = -controllerY.getCommand();
 
@@ -222,7 +225,7 @@ void loop() {
     // setMotor(1, wheelVelos[0]);
     // setMotor(2, wheelVelos[1]);
     // setMotor(3, wheelVelos[2]);
-    // Serial.println(controller1.getCommand());
+    // Serial.print(controller1.getCommand());
     // Serial.print(", ");
     // Serial.print(controller2.getCommand());
     // Serial.print(", ");
